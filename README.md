@@ -1,21 +1,38 @@
 # Coloured shapes detection
-This project uses **openCV** to detect geometric shapes in images and their colour too!
+This project is implemented using **OpenCV** to detect basic geometric shapes in an image and determine their corresponding colours.
 
-## How does it work??
-- **Preprocessing:**
-Converting the image to grayscale. Then applying thresholding to isolate shapes. After that, extracting contours with cv2.findContours.
+## How does it work?
+- **Image loading & Preprocessing:**
+  - The input image is read using ```cv2.imread``` then resized to a fixed resolution to ensure accurate detection.
+  - Then, the resized image is converted to **grayscale**.
+  - After that, **Binary inverse thresholding** is applied to separate shapes from the background.
+  - Finally, external contours are extracted using ```cv2.findContours```.
+
 
 - **Shape Detection:**
-Approximating contours with cv2.approxPolyDP, then classifying by number of vertices
-**(Triangle --> 3 / Square --> 4 (checked with aspect ratio) / Circle --> from 6 to 8 / Line --> other)*
+  - Each detected contour is approximated using ```cv2.approxPolyDP```.
+  - The number of vertices in the approximated contour is used to classify shapes:
+    Triangle → 3 vertices
+    Square → 4 vertices, verified using an aspect ratio check (width/height with tolerance) to avoid confusion with lines.
+    Circle → approximated contours with 6–8 vertices
+    Line → contours that do not match the above conditions
+  - Finally, bounding rectangles are used to compute aspect ratio and to position labels on detected shapes
 
 - **Colour Detection:**
-Converting image to HSV colour space
-Computing mean hue value inside the contour mask
-Mapping hue ranges to colour names
+  - First, the processed image is converted to the **HSV colour space**
+  - Then, a binary mask is created for each contour.
+  - The **mean hue value** inside the contour mask is calculated
+  - At the end, colours are classified based on predefined hue ranges:
+    **Red
+    Yellow
+    Green
+    Blue*
+  If the hue does not fall within these ranges, the shape is labelled as "Colour cannot be detected
 
-- **Annotation:**
-Drawing contours on the image
-Labelling each shape with its colour
-Saving the output (Here is the final output btw: https://drive.google.com/file/d/1xYd5m90tSpCj_cRl7WagLV4nRHa9DnK8/view?usp=sharing)
+- **Annotation & Output:**
+Contours are drawn on the image and each detected shape is labelled with its **geometric type** and its **detected colour**. Finally, they are all saved to an output directory.
 
+- **Dependencies:**
+   - Python
+   - OpenCV
+   - NumPy
