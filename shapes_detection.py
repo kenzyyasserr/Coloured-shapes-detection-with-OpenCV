@@ -1,5 +1,4 @@
 import cv2
-import pandas as pd
 import os
 import numpy as np
 
@@ -9,26 +8,23 @@ os.makedirs(save_output, exist_ok=True)
 
 # reading & scaling the test img
 photo = cv2.imread("test.jpg")
-img = cv2.resize(photo, (1162, 540))
+img=cv2.resize(photo,None,fx=1162/photo.shape[1],fy=540/photo.shape[0])
 
-# deteting the edges + contour
+# detecting the edges + contour
 gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
 ret, thresh = cv2.threshold(gray, 240, 255, cv2.THRESH_BINARY_INV)  
 contours, hierarchy = cv2.findContours(thresh, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
 
 for contour in contours:
     area=cv2.contourArea(contour)
-    if area < 20:
-        continue
 
-    area=cv2.contourArea(contour)
     approx = cv2.approxPolyDP(contour, 0.02* cv2.arcLength(contour, True), True)
     cv2.drawContours(img, [contour], 0, (255), 2)
     x, y , w, h = cv2.boundingRect(approx)
 
     aspect_ratio = float(w) / h  #width/height to avoid the confusion between lines and squares
     
-    if len(approx) == 4 and aspect_ratio == 1:
+    if len(approx) == 4 and 0.99 <= aspect_ratio <= 1.2:  #error tolerance
         cv2.putText(img, "square", (x, y), cv2.FONT_HERSHEY_SIMPLEX, 0.75, (255), 1, cv2.LINE_AA)
         
     elif len(approx) == 3:
@@ -49,7 +45,7 @@ for contour in contours:
     hue = mean_val[0]
 
     def get_color_name(hue):
-        if 0 <= hue < 10 or 160 <= hue <= 180:
+        if 0 <= hue < 25:
             return "Red"
         
         elif 25 <= hue < 40:  
@@ -60,6 +56,9 @@ for contour in contours:
         
         elif 85 <= hue < 140:
             return "Blue"
+        
+        else:
+            return "Color cannot be detected"
 
     color_name = get_color_name(hue)
 
