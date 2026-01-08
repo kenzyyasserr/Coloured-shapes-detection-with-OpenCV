@@ -12,21 +12,21 @@ This project is implemented using **OpenCV** to detect basic geometric shapes in
 - **Shape Detection:**
   - Each detected contour is approximated using ```cv2.approxPolyDP```.
   - The number of vertices in the approximated contour is used to classify shapes:
-    Triangle → 3 vertices
-    Square → 4 vertices, verified using an aspect ratio check (width/height with tolerance) to avoid confusion with lines.
-    Circle → approximated contours with 6–8 vertices
-    Line → contours that do not match the above conditions
-  - Finally, bounding rectangles are used to compute aspect ratio and to position labels on detected shapes
+    <ins>Triangle --> 3 vertices</ins>
+    <ins>Square --> 4 vertices, *verified using an aspect ratio check (width/height with tolerance) to avoid confusion with lines.*</ins>
+    <ins>Circle --> approximated contours with 6–8 vertices</ins>
+    <ins>Line --> contours that do not match the above conditions</ins>
+  - Finally, bounding rectangles are used to compute the aspect ratio and to position labels on detected shapes
 
 - **Colour Detection:**
   - First, the processed image is converted to the **HSV colour space**
   - Then, a binary mask is created for each contour.
   - The **mean hue value** inside the contour mask is calculated
   - At the end, colours are classified based on predefined hue ranges:
-    **Red
-    Yellow
-    Green
-    Blue*
+    <ins>*Red</ins>
+    <ins>Yellow</ins>
+    <ins>Green</ins>
+    <ins>Blue*</ins>
   If the hue does not fall within these ranges, the shape is labelled as "Colour cannot be detected
 
 - **Annotation & Output:**
